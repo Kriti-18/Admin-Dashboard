@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { ThemeProvider, CssBaseline } from '@mui/material';
+import { lightTheme, darkTheme } from './themes';
+import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+import Dashboard from './pages/Dashboard';
+import Tables from './pages/Tables';
+import Charts from './pages/Charts';
+import CalendarPage from './pages/CalendarPage';
+import KanbanPage from './pages/KanbanPage';
+import ThemeSwitcher from './components/ThemeSwitcher';
+import './styles.css'; // Ensure this import is here
 
-function App() {
+const App = () => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <Router>
+        <Navbar>
+          <ThemeSwitcher toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
+        </Navbar>
+        <Sidebar />
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/tables" element={<Tables />} />
+            <Route path="/charts" element={<Charts />} />
+            <Route path="/calendar" element={<CalendarPage />} />
+            <Route path="/kanban" element={<KanbanPage />} />
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
